@@ -3,15 +3,23 @@ package main
 import (
 	"fmt"
 
-	"github.com/canu0205/learngo/accounts"
+	"github.com/canu0205/learngo/mydict"
 )
 
 func main() {
-	account := accounts.NewAccount("canu")
-	account.Deposit(10)
-	if err := account.Withdraw(20); err != nil {
+	dictionary := mydict.Dictionary{"first": "First word"}
+	baseword := "hello"
+	definition := "Greeting word"
+
+	if err := dictionary.Add(baseword, definition); err != nil {
 		fmt.Println(err)
 	}
-	account.ChangeOwner("canu2")
-	fmt.Println(account.Balance(), account.Owner())
+	word, _ := dictionary.Search(baseword)
+	fmt.Println("Result of Add", word)
+
+	if err := dictionary.Delete(baseword); err != nil {
+		fmt.Println(err)
+	}
+	word2, _ := dictionary.Search(baseword)
+	fmt.Println("Result of Delete", word2)
 }
