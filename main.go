@@ -3,23 +3,33 @@ package main
 import (
 	"fmt"
 
-	"github.com/canu0205/learngo/mydict"
+	"github.com/canu0205/learngo/urlcheck"
 )
 
 func main() {
-	dictionary := mydict.Dictionary{"first": "First word"}
-	baseword := "hello"
-	definition := "Greeting word"
+	results := make(map[string]string)
+	c := make(chan urlcheck.URLStatus)
 
-	if err := dictionary.Add(baseword, definition); err != nil {
-		fmt.Println(err)
+	urls := []string{
+		"https://www.naver.com",
+		"https://www.google.com",
+		"https://www.amazon.com",
+		"https://www.facebook.com",
+		"https://www.instagram.com",
+		"https://www.airbnb.com",
+		"https://www.reddit.com",
 	}
-	word, _ := dictionary.Search(baseword)
-	fmt.Println("Result of Add", word)
 
-	if err := dictionary.Delete(baseword); err != nil {
-		fmt.Println(err)
+	for _, url := range urls {
+		go urlcheck.HitURL(url, c)
 	}
-	word2, _ := dictionary.Search(baseword)
-	fmt.Println("Result of Delete", word2)
+
+	for i := 0; i < len(urls); i++ {
+		result := <-c
+		results[result.URL] = result.Status
+	}
+
+	for url, result := range results {
+		fmt.Println(url, result)
+	}
 }
