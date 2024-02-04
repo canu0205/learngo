@@ -17,9 +17,12 @@ var errRequestFailed = errors.New("Request failed")
 // HitURL checks a url
 func HitURL(url string, c chan<- URLStatus) {
 	fmt.Println("Checking:", url)
+	status := "OK"
+
 	res, err := http.Get(url)
 	if err != nil || res.StatusCode >= 400 {
-		c <- URLStatus{URL: url, Status: "FAILED"}
+		status = "FAILED"
+		c <- URLStatus{URL: url, Status: status}
 	}
-	c <- URLStatus{URL: url, Status: res.Status}
+	c <- URLStatus{URL: url, Status: status}
 }

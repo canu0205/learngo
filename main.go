@@ -29,7 +29,7 @@ func main() {
 		results[result.URL] = result.Status
 	}
 
-	for url, result := range results {
-		fmt.Println(url, result)
+	for url, status := range results {
+		fmt.Println(url, status)
 	}
 }
